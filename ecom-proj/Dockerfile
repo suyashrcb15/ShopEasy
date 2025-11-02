@@ -1,12 +1,16 @@
-# Use OpenJDK image
-FROM openjdk:17-jdk-slim
+# Use Java 25 instead of 17
+FROM openjdk:25-jdk-slim
 
-# Copy the project files
+# Copy project files
 WORKDIR /app
 COPY . .
+
+# Give permission to mvnw (if not already executable)
+RUN chmod +x mvnw
 
 # Build the project
 RUN ./mvnw clean package -DskipTests
 
-# Run the built jar file
+# Run the JAR
 CMD ["java", "-jar", "target/*.jar"]
+
