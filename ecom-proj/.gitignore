@@ -1,0 +1,30 @@
+# Java / Spring Boot
+ecom-proj/target/
+*.class
+*.jar
+*.war
+*.ear
+*.iml
+.idea/
+logs/
+!.mvn/wrapper/maven-wrapper.jar
+
+# Node / React
+node_modules/
+build/
+dist/
+.env
+.npm/
+package-lock.json
+yarn.lock
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IntelliJ / VSCode
+.vscode/
+*.log
+
+# Other
+*.tmp
