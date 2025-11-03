@@ -3,8 +3,11 @@ services:
     name: ShopEasy
     env: java
     plan: free
-    buildCommand: mvn -f ecom-proj/pom.xml clean package -DskipTests
-    startCommand: java -jar ecom-proj/target/ecom-proj-0.0.1-SNAPSHOT.jar
+    buildCommand: |
+      cd ecom-proj
+      mvn clean package -DskipTests
+    startCommand: |
+      java -jar ecom-proj/target/ecom-proj-0.0.1-SNAPSHOT.jar
     envVars:
       - key: JAVA_VERSION
         value: 21
