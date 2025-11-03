@@ -33,17 +33,7 @@ const AddProduct = () => {
         );
 
         axios
-            .post("http://localhost:8080/api/product", formData, {
-                headers: { "Content-Type": "multipart/form-data" },
-            })
-            .then((response) => {
-                console.log("Product added successfully:", response.data);
-                alert("✅ Product added successfully!");
-            })
-            .catch((error) => {
-                console.error("Error adding product:", error);
-                alert("❌ Error adding product");
-            });
+        api.post("/api/product", formData, { headers: { "Content-Type": "multipart/form-data" }});
     };
 
     return (

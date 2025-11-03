@@ -22,10 +22,8 @@ const Home = ({ selectedCategory }) => {
                 const updatedProducts = await Promise.all(
                     data.map(async (product) => {
                         try {
-                            const response = await axios.get(
-                                `http://localhost:8080/api/product/${product.id}/image`,
-                                { responseType: "blob" }
-                            );
+                            const response = await api.get(`/api/product/${product.id}/image`, { responseType: "blob" });
+
                             const imageUrl = URL.createObjectURL(response.data);
                             return { ...product, imageUrl };
                         } catch (error) {
