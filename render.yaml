@@ -4,8 +4,8 @@ services:
     env: docker
     plan: free
     region: oregon
-    dockerfilePath: ./ecom-proj/Dockerfile
-    rootDir: ecom-proj
+    dockerfilePath: ./Dockerfile
+    rootDir: .
     envVars:
       - key: JAVA_VERSION
         value: 21
