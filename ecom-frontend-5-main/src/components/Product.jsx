@@ -1,76 +1,71 @@
+// src/pages/Product.jsx
+import React, { useState, useEffect, useContext } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { useContext, useEffect, useState } from "react";
+import API from "../axios";
 import AppContext from "../Context/Context";
-import axios from "../axios";
 import "./Product.css";
 
 const Product = () => {
     const { id } = useParams();
-    const { addToCart, removeFromCart, refreshData } = useContext(AppContext);
+    const navigate = useNavigate();
+    const { addToCart, removeFromCart } = useContext(AppContext);
+
     const [product, setProduct] = useState(null);
     const [imageUrl, setImageUrl] = useState("");
-    const [reviews, setReviews] = useState([
-        {
-            name: "Riya Sharma",
-            rating: 5,
-            comment: "Amazing quality and super fast delivery! Highly recommend.",
-            date: "10/20/2025",
-        },
-        {
-            name: "Amit Verma",
-            rating: 4,
-            comment: "Product works as expected. Packaging was also good.",
-            date: "09/15/2025",
-        },
-    ]);
+    const [reviews, setReviews] = useState([]);
     const [newReview, setNewReview] = useState({ name: "", rating: 0, comment: "" });
     const [showReviews, setShowReviews] = useState(false);
-    const navigate = useNavigate();
 
+    // 🧭 Fetch product details
     useEffect(() => {
         const fetchProduct = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/product/${id}`);
+                const response = await API.get(`/product/${id}`);
                 setProduct(response.data);
-                if (response.data.imageName) fetchImage();
+                if (response.data.imageName) fetchImage(response.data.imageName);
             } catch (error) {
                 console.error("Error fetching product:", error);
             }
         };
 
-        const fetchImage = async () => {
-            const response = await axios.get(`http://localhost:8080/api/product/${id}/image`, {
-                responseType: "blob",
-            });
-            setImageUrl(URL.createObjectURL(response.data));
+        const fetchImage = async (imageName) => {
+            try {
+                const res = await API.get(`/product/${id}/image`, { responseType: "blob" });
+                setImageUrl(URL.createObjectURL(res.data));
+            } catch (err) {
+                console.error("Error loading product image:", err);
+            }
         };
 
         fetchProduct();
     }, [id]);
 
+    // 🗑 Delete product
     const deleteProduct = async () => {
         try {
-            await axios.delete(`http://localhost:8080/api/product/${id}`);
+            await API.delete(`/product/${id}`);
             removeFromCart(id);
-            alert("Product deleted successfully");
-            refreshData();
-            navigate("/");
+            alert("✅ Product deleted successfully");
+            navigate("/products");
         } catch (error) {
             console.error("Error deleting product:", error);
         }
     };
 
+    // ✏️ Update product
     const handleEditClick = () => navigate(`/product/update/${id}`);
 
-    const handlAddToCart = () => {
+    // 🛒 Add to cart
+    const handleAddToCart = () => {
         addToCart(product);
-        alert("Product added to cart");
+        alert("🛒 Product added to cart");
     };
 
+    // ⭐ Handle new review submission
     const handleReviewSubmit = (e) => {
         e.preventDefault();
         if (!newReview.name || !newReview.rating || !newReview.comment) {
-            alert("Please fill in all fields");
+            alert("⚠️ Please fill all review fields");
             return;
         }
         const date = new Date().toLocaleDateString();
@@ -98,7 +93,7 @@ const Product = () => {
                 <div className="col-md-6 text-center">
                     <img
                         src={imageUrl}
-                        alt={product.imageName}
+                        alt={product.name}
                         className="img-fluid rounded shadow-sm main-product-image"
                     />
                 </div>
@@ -122,11 +117,11 @@ const Product = () => {
                     </p>
                     <p>{product.description}</p>
 
-                    <h3 className="text-danger fw-bold mb-3">${product.price}</h3>
+                    <h3 className="text-danger fw-bold mb-3">₹{product.price}</h3>
 
                     <button
                         className="btn btn-warning me-2 px-4 py-2"
-                        onClick={handlAddToCart}
+                        onClick={handleAddToCart}
                         disabled={!product.productAvailable}
                     >
                         {product.productAvailable ? "Add to Cart" : "Out of Stock"}
@@ -135,11 +130,14 @@ const Product = () => {
                     <button className="btn btn-outline-primary me-2" onClick={handleEditClick}>
                         Update
                     </button>
+
                     <button className="btn btn-outline-danger" onClick={deleteProduct}>
                         Delete
                     </button>
 
-                    <p className="mt-3 text-success fw-bold">In Stock: {product.stockQuantity}</p>
+                    <p className="mt-3 text-success fw-bold">
+                        In Stock: {product.stockQuantity}
+                    </p>
                 </div>
             </div>
 
@@ -156,7 +154,7 @@ const Product = () => {
 
                 {showReviews && (
                     <>
-                        {/* ⭐ Average Rating Display */}
+                        {/* ⭐ Rating Summary */}
                         <div className="rating-summary mb-4 text-center">
                             <h4 className="fw-semibold mb-1">
                                 Average Rating:
@@ -171,23 +169,12 @@ const Product = () => {
                             </p>
                         </div>
 
-                        {/* 💬 List of Reviews */}
+                        {/* 💬 Reviews List */}
                         <div className="review-list mt-4">
                             {reviews.map((review, index) => (
                                 <div
                                     key={index}
-                                    className="review-card p-4 mb-4 rounded-4 shadow-sm bg-white border border-light transition"
-                                    style={{
-                                        transition: "transform 0.2s ease, box-shadow 0.2s ease",
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        e.currentTarget.style.transform = "scale(1.01)";
-                                        e.currentTarget.style.boxShadow = "0 4px 12px rgba(0,0,0,0.1)";
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        e.currentTarget.style.transform = "scale(1)";
-                                        e.currentTarget.style.boxShadow = "0 2px 6px rgba(0,0,0,0.05)";
-                                    }}
+                                    className="review-card p-4 mb-4 rounded-4 shadow-sm bg-white border border-light"
                                 >
                                     <div className="d-flex justify-content-between align-items-center mb-2">
                                         <h6 className="fw-bold text-capitalize mb-0">{review.name}</h6>
@@ -196,20 +183,15 @@ const Product = () => {
                                     <div className="text-warning fs-6 mb-2">
                                         {"★".repeat(review.rating) + "☆".repeat(5 - review.rating)}
                                     </div>
-                                    <p className="text-secondary mb-3" style={{ fontSize: "0.95rem" }}>
-                                        {review.comment}
-                                    </p>
+                                    <p className="text-secondary mb-3">{review.comment}</p>
                                     <span
                                         className="badge"
                                         style={{
-                                            background:
-                                                "linear-gradient(90deg, #28a745 0%, #45d46b 100%)",
+                                            background: "linear-gradient(90deg, #28a745 0%, #45d46b 100%)",
                                             color: "white",
                                             padding: "6px 12px",
                                             borderRadius: "20px",
                                             fontSize: "0.75rem",
-                                            fontWeight: "500",
-                                            letterSpacing: "0.3px",
                                         }}
                                     >
                     ✅ Verified Purchase
@@ -218,7 +200,7 @@ const Product = () => {
                             ))}
                         </div>
 
-                        {/* ✍️ Add Review Form */}
+                        {/* ✍️ Review Form */}
                         <div className="review-form mt-5 p-4 rounded-4 shadow-sm bg-light border border-1">
                             <h5 className="fw-bold mb-4 text-primary">Write a Review</h5>
                             <form onSubmit={handleReviewSubmit}>
@@ -226,7 +208,7 @@ const Product = () => {
                                     <label className="form-label fw-semibold">Name</label>
                                     <input
                                         type="text"
-                                        className="form-control form-control-lg rounded-3"
+                                        className="form-control"
                                         value={newReview.name}
                                         onChange={(e) =>
                                             setNewReview({ ...newReview, name: e.target.value })
@@ -234,10 +216,11 @@ const Product = () => {
                                         placeholder="Enter your name"
                                     />
                                 </div>
+
                                 <div className="mb-3">
                                     <label className="form-label fw-semibold">Rating</label>
                                     <select
-                                        className="form-select form-select-lg rounded-3"
+                                        className="form-select"
                                         value={newReview.rating}
                                         onChange={(e) =>
                                             setNewReview({
@@ -254,26 +237,21 @@ const Product = () => {
                                         ))}
                                     </select>
                                 </div>
+
                                 <div className="mb-3">
                                     <label className="form-label fw-semibold">Your Review</label>
                                     <textarea
-                                        className="form-control rounded-3"
+                                        className="form-control"
                                         rows="4"
-                                        placeholder="Share your experience with this product..."
+                                        placeholder="Share your experience..."
                                         value={newReview.comment}
                                         onChange={(e) =>
                                             setNewReview({ ...newReview, comment: e.target.value })
                                         }
                                     />
                                 </div>
-                                <button
-                                    type="submit"
-                                    className="btn btn-success px-5 py-2 rounded-3 fw-semibold"
-                                    style={{
-                                        background: "linear-gradient(90deg, #1e9b50 0%, #28d76c 100%)",
-                                        border: "none",
-                                    }}
-                                >
+
+                                <button type="submit" className="btn btn-success px-5 py-2 fw-semibold">
                                     Submit Review
                                 </button>
                             </form>

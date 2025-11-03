@@ -1,7 +1,11 @@
+// src/pages/AddProduct.jsx
 import React, { useState } from "react";
-import axios from "axios";
+import API from "../axios"; // ✅ use your axios instance
+import { useNavigate } from "react-router-dom";
 
 const AddProduct = () => {
+    const navigate = useNavigate();
+
     const [product, setProduct] = useState({
         name: "",
         brand: "",
@@ -14,26 +18,40 @@ const AddProduct = () => {
     });
     const [image, setImage] = useState(null);
 
+    // Handle input change
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setProduct({ ...product, [name]: value });
     };
 
+    // Handle image selection
     const handleImageChange = (e) => {
         setImage(e.target.files[0]);
     };
 
-    const submitHandler = (event) => {
+    // Handle form submit
+    const submitHandler = async (event) => {
         event.preventDefault();
-        const formData = new FormData();
-        formData.append("imageFile", image);
-        formData.append(
-            "product",
-            new Blob([JSON.stringify(product)], { type: "application/json" })
-        );
 
-        axios
-        api.post("/api/product", formData, { headers: { "Content-Type": "multipart/form-data" }});
+        try {
+            const formData = new FormData();
+            formData.append("imageFile", image);
+            formData.append(
+                "product",
+                new Blob([JSON.stringify(product)], { type: "application/json" })
+            );
+
+            // ✅ Correct endpoint (ensure it matches your Spring Boot mapping)
+            await API.post("/product", formData, {
+                headers: { "Content-Type": "multipart/form-data" },
+            });
+
+            alert("✅ Product added successfully!");
+            navigate("/products"); // go back to product list
+        } catch (error) {
+            console.error("❌ Error adding product:", error);
+            alert("Failed to add product. Please check your backend connection.");
+        }
     };
 
     return (
@@ -64,6 +82,7 @@ const AddProduct = () => {
                                 name="name"
                                 value={product.name}
                                 onChange={handleInputChange}
+                                required
                             />
                         </div>
 
@@ -77,6 +96,7 @@ const AddProduct = () => {
                                 name="brand"
                                 value={product.brand}
                                 onChange={handleInputChange}
+                                required
                             />
                         </div>
 
@@ -103,6 +123,7 @@ const AddProduct = () => {
                                 name="price"
                                 value={product.price}
                                 onChange={handleInputChange}
+                                required
                             />
                         </div>
 
@@ -114,6 +135,7 @@ const AddProduct = () => {
                                 name="category"
                                 value={product.category}
                                 onChange={handleInputChange}
+                                required
                             >
                                 <option value="">Select category</option>
                                 <option value="Laptop">Laptop</option>
@@ -150,17 +172,19 @@ const AddProduct = () => {
                             />
                         </div>
 
-                        {/* Image */}
+                        {/* Image Upload */}
                         <div className="col-md-6">
                             <label className="form-label fw-semibold">Product Image</label>
                             <input
                                 type="file"
                                 className="form-control"
+                                accept="image/*"
                                 onChange={handleImageChange}
+                                required
                             />
                         </div>
 
-                        {/* Checkbox */}
+                        {/* Product Available Checkbox */}
                         <div className="col-12">
                             <div className="form-check">
                                 <input

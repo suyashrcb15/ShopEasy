@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import axios from "axios";
 import AppContext from "../Context/Context";
 import unplugged from "../assets/unplugged.png";
+import api from "../axios";
 
 const Home = ({ selectedCategory }) => {
     const { data, isError, addToCart, refreshData } = useContext(AppContext);
