@@ -1,13 +1,8 @@
 services:
   - type: web
     name: ShopEasy
-    env: java
+    env: docker
     plan: free
-    buildCommand: |
-      cd ecom-proj
-      mvn clean package -DskipTests
-    startCommand: |
-      java -jar ecom-proj/target/ecom-proj-0.0.1-SNAPSHOT.jar
-    envVars:
-      - key: JAVA_VERSION
-        value: 21
+    buildCommand: ""
+    startCommand: ""
+    rootDir: ecom-proj
