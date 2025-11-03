@@ -1,8 +1,12 @@
 services:
   - type: web
-    name: ShopEasy
+    name: ecom-proj
     env: docker
     plan: free
-    buildCommand: ""
-    startCommand: ""
+    region: oregon
+    dockerfilePath: ./ecom-proj/Dockerfile
     rootDir: ecom-proj
+    envVars:
+      - key: JAVA_VERSION
+        value: 21
+    healthCheckPath: /
