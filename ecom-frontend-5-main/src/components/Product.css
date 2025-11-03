@@ -1,0 +1,120 @@
+/* src/components/Product.css */
+.product-page {
+    animation: fadeIn 0.4s ease-in-out;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+    padding: 2rem;
+    background-color: #f7f7f7;
+}
+
+.product-card {
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+    overflow: hidden;
+    cursor: pointer;
+    width: 250px;
+    text-align: center;
+}
+
+.product-card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.15);
+}
+
+.product-card img {
+    width: 100%;
+    height: 220px;
+    object-fit: cover;
+}
+
+.product-info {
+    padding: 15px;
+}
+
+.product-name {
+    font-weight: bold;
+    font-size: 1.1rem;
+}
+
+.product-price {
+    color: #ff9900;
+    font-size: 1rem;
+    margin-top: 5px;
+}
+.toggle-header {
+    transition: color 0.3s ease;
+}
+
+.toggle-header:hover {
+    color: #007bff;
+}
+
+.fade-in {
+    animation: fadeInUp 0.4s ease;
+}
+.product-page {
+    animation: fadeIn 0.4s ease-in-out;
+}
+body {
+    background-color: #fff;
+    color: #212529;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(8px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.review-card {
+    transition: all 0.3s ease-in-out;
+    animation: fadeIn 0.3s ease;
+}
+
+.review-form input,
+.review-form textarea,
+.review-form select {
+    border: 1px solid #ccc;
+    transition: border-color 0.2s ease;
+}
+
+.review-form input:focus,
+.review-form textarea:focus,
+.review-form select:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 4px rgba(0, 123, 255, 0.3);
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
