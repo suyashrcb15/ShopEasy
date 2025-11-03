@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 services:
   - type: web
     name: ecom-proj
@@ -9,3 +10,17 @@ services:
       - key: JAVA_VERSION
         value: 21
 
+=======
+services:
+  - type: web
+    name: ecom-proj
+    env: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    rootDir: .
+    envVars:
+      - key: JAVA_VERSION
+        value: 21
+    healthCheckPath: /
+>>>>>>> 5b099f778d3ffc679add7274e6563678030bfaa3
