@@ -55,21 +55,25 @@ public class ProductController {
                 .body(product.getImageData());
     }
 
-    @PutMapping(value = "/product/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<String> updateProduct(@PathVariable int id,
-                                                @RequestPart("product") Product product,
-                                                @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) {
-        try {
-            Product updated = service.updateProduct(id, product, imageFile);
-            if (updated != null) {
-                return new ResponseEntity<>("Product updated successfully", HttpStatus.OK);
-            } else {
-                return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
-            }
-        } catch (IOException e) {
-            return new ResponseEntity<>("Failed to update product", HttpStatus.BAD_REQUEST);
-        }
+    @PutMapping("/product/{id}")
+public ResponseEntity<?> updateProduct(
+        @PathVariable int id,
+        @RequestPart("product") Product product,
+        @RequestPart(value = "imageFile", required = false) MultipartFile imageFile) {
+
+    try {
+        Product updated = service.updateProduct(id, product, imageFile);
+        if (updated != null)
+            return new ResponseEntity<>("Product updated successfully", HttpStatus.OK);
+        else
+            return new ResponseEntity<>("Product not found", HttpStatus.NOT_FOUND);
+    } catch (Exception e) {
+        e.printStackTrace();
+        return new ResponseEntity<>("Failed to update product. Error: " + e.getMessage(),
+                HttpStatus.INTERNAL_SERVER_ERROR);
     }
+}
+
 
     @DeleteMapping("/product/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable int id) {
