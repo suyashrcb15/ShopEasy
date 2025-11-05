@@ -1,9 +1,7 @@
 import axios from "axios";
 
 const API = axios.create({
-    baseURL: "https://shopeasy8-0.onrender.com/api",
+    baseURL: "http://localhost:8080/api",
 });
-
 delete API.defaults.headers.common["Authorization"];
-
 export default API;

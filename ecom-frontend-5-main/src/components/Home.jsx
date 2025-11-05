@@ -2,8 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import AppContext from "../Context/Context";
-import unplugged from "../assets/unplugged.png";
-import api from "../axios";
+import unplugged from "../assets/unplugged.png"
 
 const Home = ({ selectedCategory }) => {
     const { data, isError, addToCart, refreshData } = useContext(AppContext);
@@ -23,12 +22,18 @@ const Home = ({ selectedCategory }) => {
                 const updatedProducts = await Promise.all(
                     data.map(async (product) => {
                         try {
-                            const response = await api.get(`/api/product/${product.id}/image`, { responseType: "blob" });
-
+                            const response = await axios.get(
+                                `http://localhost:8080/api/product/${product.id}/image`,
+                                { responseType: "blob" }
+                            );
                             const imageUrl = URL.createObjectURL(response.data);
                             return { ...product, imageUrl };
                         } catch (error) {
-                            console.error("Error fetching image for product ID:", product.id, error);
+                            console.error(
+                                "Error fetching image for product ID:",
+                                product.id,
+                                error
+                            );
                             return { ...product, imageUrl: "placeholder-image-url" };
                         }
                     })
@@ -47,11 +52,10 @@ const Home = ({ selectedCategory }) => {
     if (isError) {
         return (
             <h2 className="text-center" style={{ padding: "18rem" }}>
-                <img src={unplugged} alt="Error" style={{ width: "100px", height: "100px" }} />
+                <img src={unplugged} alt="Error" style={{ width: '100px', height: '100px' }}/>
             </h2>
         );
     }
-
     return (
         <>
             <div
@@ -77,7 +81,14 @@ const Home = ({ selectedCategory }) => {
                     </h2>
                 ) : (
                     filteredProducts.map((product) => {
-                        const { id, brand, name, price, productAvailable, imageUrl } = product;
+                        const { id, brand, name, price, productAvailable, imageUrl } =
+                            product;
+                        const cardStyle = {
+                            width: "18rem",
+                            height: "12rem",
+                            boxShadow: "rgba(0, 0, 0, 0.24) 0px 2px 3px",
+                            backgroundColor: productAvailable ? "#fff" : "#ccc",
+                        };
                         return (
                             <div
                                 className="card mb-3"
@@ -90,8 +101,8 @@ const Home = ({ selectedCategory }) => {
                                     backgroundColor: productAvailable ? "#fff" : "#ccc",
                                     display: "flex",
                                     flexDirection: "column",
-                                    justifyContent: "flex-start",
-                                    alignItems: "stretch",
+                                    justifyContent:'flex-start',
+                                    alignItems:'stretch'
                                 }}
                                 key={id}
                             >
@@ -108,7 +119,7 @@ const Home = ({ selectedCategory }) => {
                                             objectFit: "cover",
                                             padding: "5px",
                                             margin: "0",
-                                            borderRadius: "10px 10px 0 0",
+                                            borderRadius: "10px 10px 10px 10px",
                                         }}
                                     />
                                     <div
@@ -139,19 +150,15 @@ const Home = ({ selectedCategory }) => {
                                         <div className="home-cart-price">
                                             <h5
                                                 className="card-text"
-                                                style={{
-                                                    fontWeight: "600",
-                                                    fontSize: "1.1rem",
-                                                    marginBottom: "5px",
-                                                }}
+                                                style={{ fontWeight: "600", fontSize: "1.1rem",marginBottom:'5px' }}
                                             >
-                                                <i className="bi bi-currency-rupee"></i>
+                                                <i class="bi bi-currency-rupee"></i>
                                                 {price}
                                             </h5>
                                         </div>
                                         <button
                                             className="btn-hover color-9"
-                                            style={{ margin: "10px 25px 0px" }}
+                                            style={{margin:'10px 25px 0px '  }}
                                             onClick={(e) => {
                                                 e.preventDefault();
                                                 addToCart(product);
@@ -167,62 +174,6 @@ const Home = ({ selectedCategory }) => {
                     })
                 )}
             </div>
-
-            {/* ✅ Footer Section */}
-            <footer
-                style={{
-                    background: "linear-gradient(to right, #6366F1, #8B5CF6)",
-                    color: "#fff",
-                    padding: "30px 20px",
-                    textAlign: "center",
-                    marginTop: "40px",
-                }}
-            >
-                <h3 style={{ fontSize: "1.5rem", fontWeight: "bold" }}>ShopEasy</h3>
-                <p style={{ margin: "10px 0" }}>
-                    Making online shopping simple, fast, and delightful.
-                </p>
-                <div style={{ marginTop: "15px" }}>
-                    <a
-                        href="/about"
-                        style={{
-                            color: "#fff",
-                            textDecoration: "none",
-                            margin: "0 10px",
-                            fontWeight: "500",
-                        }}
-                    >
-                        About
-                    </a>
-                    <a
-                        href="/contact"
-                        style={{
-                            color: "#fff",
-                            textDecoration: "none",
-                            margin: "0 10px",
-                            fontWeight: "500",
-                        }}
-                    >
-                        Contact
-                    </a>
-                    <a
-                        href="https://www.instagram.com"
-                        target="_blank"
-                        rel="noreferrer"
-                        style={{
-                            color: "#fff",
-                            textDecoration: "none",
-                            margin: "0 10px",
-                            fontWeight: "500",
-                        }}
-                    >
-                        Instagram
-                    </a>
-                </div>
-                <p style={{ marginTop: "15px", fontSize: "0.9rem", opacity: 0.8 }}>
-                    © {new Date().getFullYear()} ShopEasy. All rights reserved.
-                </p>
-            </footer>
         </>
     );
 };
