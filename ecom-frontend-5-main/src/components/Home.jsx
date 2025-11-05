@@ -25,7 +25,7 @@ const Home = ({ selectedCategory }) => {
                     data.map(async (product) => {
                         try {
                             const response = await axios.get(
-                                `https://your-backend-name.onrender.com/api/product/${product.id}/image`,
+                                `https://shopeasy8-0.onrender.com/api/product/${product.id}/image`,
                                 { responseType: "blob" }
                             );
                             const blob = response.data;
